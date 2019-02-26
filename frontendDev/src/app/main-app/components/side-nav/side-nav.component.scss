@@ -1,0 +1,79 @@
+$primeColor: #673ab7;
+$primeColorLight: #673ab72e;
+.app-sidenav-container {
+    background-image: url('/assets/img/bg6.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+}
+
+.app-sidenav {
+    min-width: 300px;
+    width: 300px;
+    background-color: rgba(255, 255, 255, .9);
+    @media (max-width: 1023px) {
+        background-color: white;
+    }
+    mat-icon {
+        margin-right: 10px;
+    }
+}
+
+mat-list-item {
+    cursor: pointer;
+    &:hover {
+        color: $primeColor;
+    }
+}
+
+.outletWrapper {
+    margin: 40px 40px 40px 40px;
+    &.roomForAll {
+        margin: 80px 40px 40px 80px;
+    }
+    @media (max-width: 1023px) {
+        margin: 80px 20px 20px 20px;
+        &.roomForAll {
+            margin: 80px 20px 20px 20px;
+        }
+    }
+}
+
+.activeRoute {
+    background-color: $primeColorLight;
+    color: $primeColor;
+    &:focus,
+    &:active {
+        outline: none;
+    }
+    mat-list-item-content {
+        &:focus,
+        &:active {
+            outline: none;
+        }
+    }
+}
+
+.threeLittleDots {
+    position: fixed;
+    z-index: 2;
+    color: white;
+    left: 20px;
+    top: 20px;
+    @media (max-width: 1023px) {
+        display: none;
+    }
+}
+
+.sidenavToolbar {
+    position: relative;
+    .sidenavCloseButton {
+        position: absolute;
+        cursor: pointer;
+        right: 0;
+        opacity: .4;
+        &:hover {
+            opacity: 1;
+        }
+    }
+}

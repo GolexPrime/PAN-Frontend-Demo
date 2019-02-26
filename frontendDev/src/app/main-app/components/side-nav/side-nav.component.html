@@ -1,0 +1,62 @@
+<button class="threeLittleDots" *ngIf="showMiniMenuButton" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu" class="mat-elevation-z20">
+
+    <button [routerLink]="['/welcome']" mat-menu-item>
+        <mat-icon>favorite_border</mat-icon>{{ 'welcome' | titlecase }}
+    </button>
+
+    <button [routerLink]="['/title']" mat-menu-item>
+        <mat-icon>title</mat-icon>QUERY: Info by Title
+    </button>
+
+    <button [routerLink]="['/author']" mat-menu-item>
+        <mat-icon>person</mat-icon>QUERY: Author & Time
+    </button>
+
+    <button [routerLink]="['/citation']" mat-menu-item>
+        <mat-icon>format_quote</mat-icon>QUERY: Cites & Cited By
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button (click)="openMenu()" mat-menu-item>
+        <mat-icon>dialpad</mat-icon><span>{{ 'show sidebar' | titlecase }}</span>
+    </button>
+</mat-menu>
+
+<mat-drawer-container class="app-sidenav-container"  fxFlexFill>
+    <mat-drawer #sidenav [mode]="isScreenSmall() ? 'over' : 'side'" [opened]="!isScreenSmall()" (closedStart)="onClose()" (openedStart)="onOpen()" class="app-sidenav mat-elevation-z20">
+        <mat-toolbar class="sidenavToolbar" color="primary">
+            PAN Search Engine Demo
+            <mat-icon *ngIf="!isScreenSmall()" class="sidenavCloseButton" (click)="closeMenu()">close</mat-icon>
+        </mat-toolbar>
+
+        <mat-list>
+            <mat-list-item class="active" [routerLink]="['/welcome']" routerLinkActive="activeRoute">
+                <mat-icon>favorite_border</mat-icon>{{ 'welcome' | titlecase }}
+            </mat-list-item>
+
+            <mat-list-item [routerLink]="['/title']" routerLinkActive="activeRoute">
+                <mat-icon>title</mat-icon>QUERY: Info by Title
+            </mat-list-item>
+
+            <mat-list-item [routerLink]="['/author']" routerLinkActive="activeRoute">
+                <mat-icon>person</mat-icon>QUERY: Author & Time
+            </mat-list-item>
+
+            <mat-list-item [routerLink]="['/citation']" routerLinkActive="activeRoute">
+                <mat-icon>format_quote</mat-icon>QUERY: Cites & Cited By
+            </mat-list-item>
+        </mat-list>
+    </mat-drawer>
+
+    <div class="app-sidenav-content" fxLayout="column">
+        <app-toolbar *ngIf="isScreenSmall()" class="mainContentToolBar" (toggleSidenav)="sidenav.toggle()"></app-toolbar>
+
+        <div [ngClass]="{'outletWrapper': true, 'roomForAll': showMiniMenuButton}">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</mat-drawer-container>

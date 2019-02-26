@@ -1,0 +1,71 @@
+$primary-color: #673ab7;
+$secodary-color: rgba(255, 193, 7, .5);
+.descriptionText {
+    margin-top: 20px;
+    line-height: 24px;
+}
+
+code {
+    color: $primary-color;
+}
+
+.info-by-title-form-field {
+    width: 100%;
+}
+
+.icon {
+    position: relative;
+    top: 5px;
+}
+
+.mat-list-item {
+    h6 {
+        color: grey;
+        margin-bottom: 10px;
+    }
+    h5 {
+        font-weight: 400;
+    }
+    p {
+        margin-top: 0;
+    }
+    mat-expansion-panel {
+        margin-bottom: 20px;
+        margin-top: 20px;
+        p {
+            margin-top: 14px;
+        }
+    }
+}
+
+mat-card-content {
+    overflow: hidden;
+}
+
+.expansion {
+    button {
+        width: 100%;
+    }
+    margin: 20px;
+}
+
+table {
+    background: none;
+    td {
+        padding: 0;
+    }
+}
+
+.timeStats {
+    background-color: #683ab71c;
+    margin-bottom: 30px;
+}
+
+.errorCard {
+    background-color: rgba(255, 199, 216, 0.747);
+    color: rgb(155, 0, 0) !important;
+}
+
+.submitButton {
+    width: 100%;
+}

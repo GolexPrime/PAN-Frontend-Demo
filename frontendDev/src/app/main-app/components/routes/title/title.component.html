@@ -1,0 +1,223 @@
+<div class="headerContainer" fxLayout>
+    <mat-card class="headerCard mat-elevation-z20 mat-card-global" fxFlex fxFlex.gt-sm="100%">
+        <mat-card-content>
+            <h3 class="mat-headline">
+                Info by Title <span class="primary"><i>Query</i></span>
+            </h3>
+
+            <mat-divider [inset]="true"></mat-divider>
+
+            <p class="descriptionText">Returns a list <code>Paper</code> where a <code>Paper</code> inside this list
+                matches a pattern on the title, and
+                which was published in a particular duration. This pattern is a <em>substring</em> or <em>exact</em>
+                search. For
+                <em>exact</em> search, the title is a string <code>title</code>. However, it is not guaranteed that an
+                <em>exact</em> search returns only one <code>Paper</code> due to title collisions. For
+                <em>substring</em> search,
+                the title is any super string containing the needle string <code>title</code> somewhere. More in detail,
+                a
+                <em>substring</em> search is either a <em>starts with</em> search, a <em>ends with</em> search, or a
+                <em>contains</em> search. For a <em>starts with</em> search, <code>title</code> must start with a
+                wildcard
+                <code> * </code> (e.g., “<code><em>ello</em></code><em>" that matches <code>Hello</code>). For a
+                    <em>ends with</em>
+                    search, <code>title</code> must end with a wildcard <code> * </code> (e.g., "<code>Hell</code></em>”
+                that
+                matches <code>Hello</code>). For a <em>contains</em> search, <code>title</code> must both start and end
+                with a
+                wildcard <code> * </code> (e.g., “<code><em>ell</em></code>” that machtes <code>Hello</code>). For
+                <em>substring</em> search it is likely that resulting list of <code>Paper</code> objects contains more
+                than 1
+                element. In addition to the title pattern, a <em>time span</em> can be specified. This time span is a
+                range
+                <code>from</code> <code>to</code> (inclusiv) on years of publication in which a ptential paper in the
+                result must be
+                published in order to be added to the result.
+            </p>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div class="headerContainer">
+    <mat-card class="headerCard mat-elevation-z20 mat-card-global" fxLayout="column">
+        <mat-card class="headerCard mat-elevation-z20 mat-card-global">
+            <mat-card-content>
+                <h5>Your Query</h5>
+                <form class="info-by-title-form" (ngSubmit)="onSubmit()">
+                    <mat-form-field class="info-by-title-form-field">
+                        <input matInput matDividerColor="white" placeholder="Enter a paper title name"
+                            [(ngModel)]="value" (keyup)="updateURI()" name="info-by-title">
+                    </mat-form-field>
+                </form>
+
+                <div class="test" *ngIf="value">
+                    <p><strong>Request: </strong><span class="mat-small">{{papersURI}}?<span
+                                class="primary">{{uriString}}</span></span></p>
+                </div>
+
+                <div>
+                    <button *ngIf="value !== ''" (click)="onSubmit()" mat-flat-button class="mat-caption submitButton">
+                        Submit </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-card>
+</div>
+
+<div *ngIf="firstRun">
+    <mat-card class="headerCard mat-elevation-z20 mat-card-global" fxLayout="column">
+        <mat-card-content *ngIf="loading">
+            <mat-spinner></mat-spinner>
+        </mat-card-content>
+
+        <mat-card class="headerCard mat-elevation-z20 mat-card-global" fxLayout="column"
+            *ngIf="result.result && result.result.length">
+
+            <mat-card class="timeStats">
+                <p class="mat-small"><span class="primary">Round Trip:</span>
+                    {{result.status.statistics.resent - result.status.statistics.received}}s</p>
+                <mat-divider [inset]="true"></mat-divider>
+                <p class="mat-small"><span class="primary">Execution Time:</span>
+                    {{result.status.statistics.completed - result.status.statistics.issued}}s</p>
+            </mat-card>
+
+
+            <mat-tab-group>
+                <mat-tab label="TABLE">
+                    <table mat-table [dataSource]="result.result" width="100%">
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+
+                            <td mat-cell *matCellDef="let element; let i = index" class="mat-list-item">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <h4>
+                                                <mat-icon class="icon">library_books</mat-icon>
+                                                {{element.title | titlecase}}
+                                            </h4>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+
+                                    <div *ngIf="element.url">
+                                        <a href="{{element.url}}" target="_blank"><span><strong class="primary">URL:
+                                                </strong></span>{{element.url}}</a>
+                                        <mat-divider style="margin-top: 20px;" [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.lang">
+                                        <p><span><strong class="primary">{{'lang' | titlecase}}:
+                                                </strong></span>{{element.lang}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.year">
+                                        <p><span><strong class="primary">{{'year' | titlecase}}:
+                                                </strong></span>{{element.year}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.issue">
+                                        <p><span><strong class="primary">{{'issue' | titlecase}}:
+                                                </strong></span>{{element.issue}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.publisher">
+                                        <p><span><strong class="primary">{{'publisher' | titlecase}}:
+                                                </strong></span>{{element.publisher}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.page_start">
+                                        <p><span><strong class="primary">{{'page_start' | titlecase}}:
+                                                </strong></span>{{element.page_start}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.volume">
+                                        <p><span><strong class="primary">{{'volume' | titlecase}}:
+                                                </strong></span>{{element.volume}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.id">
+                                        <p><span><strong class="primary">{{'id' | titlecase}}:
+                                                </strong></span>{{element.id}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.n_citation">
+                                        <p><span><strong class="primary">{{'n_citation' | titlecase}}:
+                                                </strong></span>{{element.n_citation}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.page_end">
+                                        <p><span><strong class="primary">{{'page_end' | titlecase}}:
+                                                </strong></span>{{element.page_end}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.doi">
+                                        <p><span><strong class="primary">{{'doi' | titlecase}}:
+                                                </strong></span>{{element.doi}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.doc_type">
+                                        <p><span><strong class="primary">{{'doc_type' | titlecase}}:
+                                                </strong></span>{{element.doc_type}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.venue">
+                                        <p><span><strong class="primary">{{'venue' | titlecase}}:
+                                                </strong></span>{{element.venue}}</p>
+                                        <mat-divider [inset]=true></mat-divider>
+                                    </div>
+
+                                    <div *ngIf="element.abstract">
+                                        <p><span><strong class="primary">{{'abstract' | titlecase}}:
+                                                </strong></span>{{element.abstract}}</p>
+                                    </div>
+                                </mat-expansion-panel>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </mat-tab>
+
+                <mat-tab label="JSON">
+                    <div class="expansion">
+                        <button (click)="expansion = !expansion" mat-flat-button
+                            class="mat-caption">{{expansion ? 'collapse all' : 'unfold all'}}
+                        </button>
+                    </div>
+
+                    <div class="viewer">
+                        <ngx-json-viewer [json]="result.result" [expanded]="expansion"></ngx-json-viewer>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card>
+
+        <mat-card class="headerCard mat-elevation-z20 mat-card-global errorCard" fxLayout="column"
+            *ngIf="!result.result && result['error-message'] && result['error-message'] !== ''">
+            <h3>
+                <mat-icon class="icon">error_outline</mat-icon> Error
+            </h3>
+
+            <p class="mat-small"><span>Round Trip:</span>
+                {{result.status.statistics.resent - result.status.statistics.received}}s</p>
+
+            <p class="mat-small"><span>Execution Time:</span>
+                {{result.status.statistics.completed - result.status.statistics.issued}}s</p>
+
+            <mat-divider [inset]="true"></mat-divider>
+
+            <p class="mat-small">{{result['error-message']}}</p>
+        </mat-card>
+    </mat-card>
+</div>

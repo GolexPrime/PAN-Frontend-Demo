@@ -1,0 +1,122 @@
+<div class="headerContainer" fxLayout>
+    <mat-card class="headerCard mat-elevation-z20 mat-card-global" fxFlex fxFlex.gt-sm="100%">
+        <mat-card-content>
+            <h3 class="mat-headline">
+                Cited & Cited By <span class="primary"><i>Query</i></span>
+            </h3>
+
+            <mat-divider [inset]="true"></mat-divider>
+
+            <p class="descriptionText">Returns a list of <code>Paper Synopsis</code> objects containing papers that are either <em>cited by</em> a
+                particular needle paper, or that are <em>cited</em> by this needle paper. The needle paper is identified by its
+                title via an <em>exact match</em> on the needle papers <code>title</code>. The direction of the citation search
+                is controlled via the query parameter <code>type</code>.</p>
+
+            <p class="descriptionText">The result list is truncated the a maximum length, called <code>limit</code>. The limit has a default value of
+                <code>25</code> but can be set to particular value larger 0.</p>
+
+            <p class="descriptionText">A call to this resource returns a <code>Query Result</code>.</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div class="headerContainer">
+    <mat-card class="headerCard mat-elevation-z20 mat-card-global" fxLayout="column">
+        <mat-card class="headerCard mat-elevation-z20 mat-card-global">
+            <mat-card-content>
+                <h5>Your Query</h5>
+
+                <form class="citation-form" (ngSubmit)="onSubmit()">
+                    <mat-slide-toggle [(ngModel)]="citedBy" (change)="updateURI()" name="cited-by">{{citedBy ? 'Cited By' : 'Cited'}}</mat-slide-toggle>
+
+                    <div fxLayout="row">
+                        <mat-form-field class="citation-form-field" fxFlex="75%">
+                            <input matInput matDividerColor="white" placeholder="{{citedBy ? 'Cited By' : 'Cited'}}" [(ngModel)]="value"
+                                (keyup)="updateURI()" (keyup.enter)="onSubmit()"name="citation">
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex="25%" class="limit">
+                            <input type="number" matInput placeholder="Limit" [(ngModel)]="limit" (keyup)="updateURI()" (keyup.enter)="onSubmit()" name="limit">
+                        </mat-form-field>
+                    </div>
+                </form>
+
+                <div class="test" *ngIf="value">
+                    <p><strong>Request: </strong><span class="mat-small">{{papersURI}}?<span
+                                class="primary">{{uriString}}</span></span></p>
+                </div>
+
+                <div>
+                    <button *ngIf="value !== ''" (click)="onSubmit()" mat-flat-button
+                        class="mat-caption submitButton"> Submit </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-card>
+</div>
+
+<div *ngIf="firstRun">
+    <mat-card class="headerCard mat-elevation-z20 mat-card-global" fxLayout="column">
+        <mat-card-content *ngIf="loading">
+            <mat-spinner></mat-spinner>
+        </mat-card-content>
+
+        <mat-card class="headerCard mat-elevation-z20 mat-card-global" fxLayout="column"
+            *ngIf="result.result && result.result.length">
+
+            <mat-card class="timeStats">
+                <p class="mat-small"><span class="primary">Round Trip:</span>
+                    {{result.status.statistics.resent - result.status.statistics.received}}s</p>
+
+                <mat-divider [inset]="true"></mat-divider>
+
+                <p class="mat-small"><span class="primary">Execution Time:</span>
+                    {{result.status.statistics.completed - result.status.statistics.issued}}s</p>
+            </mat-card>
+
+
+            <mat-tab-group>
+                <mat-tab label="List">
+                    <mat-list>
+                        <mat-list-item *ngFor="let entry of result.result">
+                            <h3 matLine class="primary"><mat-icon>format_quote</mat-icon> {{entry.title}} </h3>
+                            <p matLine *ngFor="let author of entry.authors">
+                                <span class="mat-small mat-caption">-- {{author}} </span>
+                            </p>
+                            <mat-divider [inset]="true"></mat-divider>
+                        </mat-list-item>
+                    </mat-list>
+                </mat-tab>
+
+                <mat-tab label="JSON">
+                    <div class="expansion">
+                        <button (click)="expansion = !expansion" mat-flat-button
+                            class="mat-caption">{{expansion ? 'collapse all' : 'unfold all'}}
+                        </button>
+                    </div>
+
+                    <div class="viewer">
+                        <ngx-json-viewer [json]="result.result" [expanded]="expansion"></ngx-json-viewer>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card>
+
+        <mat-card class="headerCard mat-elevation-z20 mat-card-global errorCard" fxLayout="column"
+            *ngIf="!result.result && result['error-message'] && result['error-message'] !== ''">
+            <h3>
+                <mat-icon class="icon">error_outline</mat-icon> Error
+            </h3>
+
+            <p class="mat-small"><span>Round Trip:</span>
+                {{result.status.statistics.resent - result.status.statistics.received}}s</p>
+
+            <p class="mat-small"><span>Execution Time:</span>
+                {{result.status.statistics.completed - result.status.statistics.issued}}s</p>
+
+            <mat-divider [inset]="true"></mat-divider>
+
+            <p class="mat-small">{{result['error-message']}}</p>
+        </mat-card>
+    </mat-card>
+</div>

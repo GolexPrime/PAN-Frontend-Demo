@@ -1,0 +1,54 @@
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+$primary-color: #673ab7;
+$success-color: #92ff92;
+$error-color: #ff9292;
+body {
+    margin: 0;
+    font-family: 'roboto';
+    text-shadow: 0px 0px 1px #673ab71f;
+}
+
+.headerContainer {
+    margin-bottom: 20px;
+    .headerCard {
+        margin-bottom: 20px;
+        @media (max-width: 1023px) {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.primary {
+    color: $primary-color;
+}
+
+.mat-card-global {
+    background-color: rgba(255, 255, 255, .7); // text-shadow: 0px 0px 1px #673ab71f;
+}
+
+mat-card-title {
+    margin-left: -8px
+}
+
+mat-card-subtitle {
+    margin-left: -8px
+}
+
+.justFontHeader {
+    color: white;
+    margin: 0 0 20px 0;
+}
+
+mat-spinner {
+    margin: 0 auto;
+}
+
+.snack-bar-color-success,
+.success-color {
+    color: $success-color;
+}
+
+.snack-bar-color-error,
+.error-color {
+    color: $error-color;
+}
