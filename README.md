@@ -18,7 +18,7 @@ On first Run:
 
     6. run "npm install"
 
-    7. ng b
+    7. run "ng b --prod"
 
 After that:
     
