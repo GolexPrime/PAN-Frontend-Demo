@@ -1,5 +1,9 @@
 # How to start
 
+Things you NEED to install OR UPDATE (!!!):
+    
+    - Node.js (https://nodejs.org/en/download/)
+
 Files you may wanna update:
 
     1. /frontendDev/src/app/main-app/components/routes/welcome/welcome.component.html
@@ -12,19 +16,15 @@ Files you may wanna update:
 
 On first Run: 
 
-    1. install Node.js (https://nodejs.org/en/download/)
+    1. cd into /
 
-    2. run "npm install -g @angular/cli"
+    2. run "npm install"
 
-    3. cd into /
+    3. cd into /frontendDev
 
     4. run "npm install"
 
-    5. cd into /frontendDev
-
-    6. run "npm install"
-
-    7. run "ng b --prod"
+    5. run "ng b --prod"
 
 After that:
     
